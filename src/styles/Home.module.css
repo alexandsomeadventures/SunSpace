@@ -1,0 +1,46 @@
+/* src/styles/Home.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #8c1d40; /* ASU Maroon */
+  color: #ffc627; /* ASU Gold */
+  font-family: 'Georgia', serif;
+  text-align: center;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.button {
+  background-color: #ffc627; /* ASU Gold */
+  color: #8c1d40; /* ASU Maroon */
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.button:hover {
+  transform: scale(1.05);
+  background-color: #ffe08a; /* Slightly lighter gold */
+}
+
+.button:active {
+  transform: scale(0.95);
+}
