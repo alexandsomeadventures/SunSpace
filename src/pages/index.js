@@ -1,26 +1,45 @@
 import { useRouter } from 'next/router';
-import styles from '@/styles/Home.module.css';
+import { Container, Typography, Button, Box } from '@mui/material';
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>SunSpace</h1>
-      <div className={styles.buttonContainer}>
-        {/* "Create New Room" Button */}
-        <button
-          className={styles.button}
+    <Container
+      maxWidth="sm"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        textAlign: 'center',
+        bgcolor: '#f5f5f5', // Light background color
+      }}
+    >
+      {/* Title */}
+      <Typography variant="h2" component="h1" gutterBottom>
+        SunSpace
+      </Typography>
+
+      {/* Buttons */}
+      <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
           onClick={() => router.push('/create-room')}
         >
           Create New Room
-        </button>
-
-        {/* "Join a Room" Button */}
-        <button className={styles.button}>
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          size="large"
+        >
           Join a Room
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Container>
   );
 }
