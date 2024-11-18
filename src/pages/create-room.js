@@ -1,49 +1,77 @@
 // src/pages/create-room.js
-//YEAHHHH
+
 import { useRef, useEffect, useState } from 'react';
+import { fabric } from 'fabric';
 
 export default function CreateRoom() {
   const canvasRef = useRef(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const fabricCanvasRef = useRef(null);
+  const [brushColor, setBrushColor] = useState('black');
+  const [brushWidth, setBrushWidth] = useState(2);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-
-    // Set canvas size
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // Initialize Fabric.js Canvas
+    const fabricCanvas = new fabric.Canvas(canvasRef.current, {
+      isDrawingMode: true, // Enable freehand drawing mode
+    });
 
     // Set default drawing styles
-    context.strokeStyle = 'black';
-    context.lineWidth = 2;
-    context.lineCap = 'round';
+    fabricCanvas.freeDrawingBrush.color = brushColor;
+    fabricCanvas.freeDrawingBrush.width = brushWidth;
+
+    // Store the Fabric.js canvas in a ref for future use
+    fabricCanvasRef.current = fabricCanvas;
+
+    // Cleanup on unmount
+    return () => {
+      fabricCanvas.dispose();
+    };
   }, []);
 
-  const startDrawing = (e) => {
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-
-    setIsDrawing(true);
-    context.beginPath();
-    context.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+  // Function to update drawing color
+  const changeColor = (color) => {
+    setBrushColor(color);
+    if (fabricCanvasRef.current) {
+      fabricCanvasRef.current.freeDrawingBrush.color = color;
+    }
   };
 
-  const draw = (e) => {
-    if (!isDrawing) return;
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-
-    context.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-    context.stroke();
+  // Function to update brush size
+  const changeBrushSize = (size) => {
+    setBrushWidth(size);
+    if (fabricCanvasRef.current) {
+      fabricCanvasRef.current.freeDrawingBrush.width = size;
+    }
   };
 
-  const stopDrawing = () => {
-    setIsDrawing(false);
+  // Function to enable eraser
+  const enableEraser = () => {
+    if (fabricCanvasRef.current) {
+      fabricCanvasRef.current.isDrawingMode = true;
+      fabricCanvasRef.current.freeDrawingBrush.color = 'white'; // White acts as the eraser
+    }
   };
 
   return (
     <div>
+      {/* Tool Buttons */}
+      <div style={{ marginBottom: '10px' }}>
+        {/* Color Buttons */}
+        <button onClick={() => changeColor('black')}>Black</button>
+        <button onClick={() => changeColor('red')}>Red</button>
+        <button onClick={() => changeColor('blue')}>Blue</button>
+        <button onClick={() => changeColor('green')}>Green</button>
+
+        {/* Brush Size Buttons */}
+        <button onClick={() => changeBrushSize(2)}>Small</button>
+        <button onClick={() => changeBrushSize(5)}>Medium</button>
+        <button onClick={() => changeBrushSize(10)}>Large</button>
+
+        {/* Eraser Button */}
+        <button onClick={enableEraser}>Eraser</button>
+      </div>
+
+      {/* Canvas */}
       <canvas
         ref={canvasRef}
         style={{
@@ -51,10 +79,8 @@ export default function CreateRoom() {
           backgroundColor: 'white',
           cursor: 'crosshair',
         }}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
+        width={window.innerWidth}
+        height={window.innerHeight}
       ></canvas>
     </div>
   );
