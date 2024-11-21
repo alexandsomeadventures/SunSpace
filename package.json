@@ -12,10 +12,11 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.7",
-    "fabric": "^5.4.2",
-    "next": "15.0.3",
+    "fabric": "^6.5.1",
+    "next": "^15.0.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "typewriter-effect": "^2.21.0"
   },
   "devDependencies": {
     "eslint": "^8",
