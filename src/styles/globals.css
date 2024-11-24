@@ -5,14 +5,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: hsl(0, 0%, 100%);
     --foreground: #ededed;
   }
 }
 
 html,
 body {
-
   overflow-x: hidden;
 }
 
@@ -24,7 +23,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
 
 a {
   color: inherit;
@@ -34,5 +37,14 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-120%);
   }
 }
