@@ -18,9 +18,12 @@ export default function Home() {
   ];
   const router = useRouter();
   const { user, isSignedIn } = useUser();
-  const pages = ["Pricing", "Contact", "About", "Sign In", "Sign Up"];
+  const pages = ["Pricing", "Contact", "About"];
+  const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { openSignUp, openSignIn } = useClerk();
+  
   const handleCreateRoom = () => {
     
       if (!isSignedIn) {
@@ -40,13 +43,18 @@ export default function Home() {
       router.push("/join-room");
     }
   
-};  
+  };  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
 
   return (
@@ -132,8 +140,44 @@ export default function Home() {
                 </Button>
               ))}
             </Box>
+            {isSignedIn ? (
+              <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            ) : (
+              <>
+              <Button color="inherit" onClick={() => openSignUp()}>Sign Up</Button>
+              <Button color="inherit" onClick={() => openSignIn()}>Sign In</Button>
+              </>
+            )}
           </Toolbar>
-        </Container>
+        </Container> 
       </AppBar>
 
       <Container sx={{ paddingTop: "80px", bgcolor: "background.paper", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
