@@ -3,7 +3,6 @@ import { Container, Typography, Button, Box, AppBar, Toolbar, IconButton, Menu, 
 import MenuIcon from "@mui/icons-material/Menu";
 import Typewriter from "typewriter-effect";
 import * as React from 'react';
-import { SignUp } from '@clerk/nextjs';
 import { useClerk } from '@clerk/nextjs';
 import { useUser } from "@clerk/nextjs";
 export default function Home() {
@@ -21,7 +20,7 @@ export default function Home() {
   const { user, isSignedIn } = useUser();
   const pages = ["Pricing", "Contact", "About", "Sign In", "Sign Up"];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const { openSignUp } = useClerk();
+  const { openSignUp, openSignIn } = useClerk();
   const handleCreateRoom = () => {
     
       if (!isSignedIn) {
@@ -32,6 +31,16 @@ export default function Home() {
       }
     
   };  
+  const handleJoinRoom = () => {
+    
+    if (!isSignedIn) {
+      openSignUp();
+    } 
+    else {
+      router.push("/join-room");
+    }
+  
+};  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -98,8 +107,12 @@ export default function Home() {
                 sx={{ display: { xs: 'block', md: 'none' } }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography sx={{ textAlign: 'right' }}>{page}</Typography>
+                  <MenuItem key={page} onClick={() => {
+                    if (page === "Sign In") openSignIn();
+                    else if (page === "Sign Up") openSignUp();
+                    else handleCloseNavMenu();
+                  }}>
+                    <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -108,7 +121,11 @@ export default function Home() {
               {pages.map((page) => (
                 <Button
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => {
+                    if (page === "Sign In") openSignIn();
+                    else if (page === "Sign Up") openSignUp();
+                    else handleCloseNavMenu();
+                  }}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                   {page}
@@ -167,7 +184,7 @@ export default function Home() {
             variant="outlined"
             color="secondary"
             size="large"
-            onClick={() => router.push("/join-room")}
+            onClick={handleJoinRoom}
             sx={{
               color: "black",
               padding: "15px 20px",
