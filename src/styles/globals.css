@@ -48,3 +48,33 @@ a {
     transform: translateX(-120%);
   }
 }
+
+@media (max-width: 320px) {
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-160%);
+    }
+  }
+
+  .scroll-animation {
+    animation: scroll 14s linear infinite; /* Increase duration for small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-131%);
+    }
+  }
+
+  .scroll-animation {
+    animation: scroll 14s linear infinite; /* Increase duration for small screens */
+  }
+}
