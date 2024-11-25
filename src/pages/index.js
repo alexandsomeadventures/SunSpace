@@ -3,7 +3,9 @@ import { Container, Typography, Button, Box, AppBar, Toolbar, IconButton, Menu, 
 import MenuIcon from "@mui/icons-material/Menu";
 import Typewriter from "typewriter-effect";
 import * as React from 'react';
-
+import { SignUp } from '@clerk/nextjs';
+import { useClerk } from '@clerk/nextjs';
+import { useUser } from "@clerk/nextjs";
 export default function Home() {
   const logos = [
     "/logos/meta.png",
@@ -16,8 +18,20 @@ export default function Home() {
     "/logos/spotify.png",
   ];
   const router = useRouter();
+  const { user, isSignedIn } = useUser();
   const pages = ["Pricing", "Contact", "About", "Sign In", "Sign Up"];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const { openSignUp } = useClerk();
+  const handleCreateRoom = () => {
+    
+      if (!isSignedIn) {
+        openSignUp();
+      } 
+      else {
+        router.push("/create-room");
+      }
+    
+  };  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -138,7 +152,7 @@ export default function Home() {
             variant="contained"
             color="primary"
             size="large"
-            onClick={() => router.push("/create-room")}
+            onClick={handleCreateRoom}
             sx={{
               padding: "15px 20px",
               border: "2px solid #fff",
