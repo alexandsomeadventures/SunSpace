@@ -1,87 +1,123 @@
-// src/pages/create-room.js
-
-import { useRef, useEffect, useState } from 'react';
-import { fabric } from 'fabric';
+import { useEffect, useRef, useState } from 'react';
+import { AppBar, Box, Button, Toolbar, Select, MenuItem, TextField } from '@mui/material';
+import ModeIcon from '@mui/icons-material/Mode';
+import BrushIcon from '@mui/icons-material/Brush';
+import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
+function MenuButton({ icon, onClick }) {
+  return (
+    <Button
+      sx={{
+        color: "white", 
+        border: "solid",
+        marginRight: "8px",
+      }}
+      onClick={onClick}
+    >
+      {icon}
+    </Button>
+  );
+}
 
 export default function CreateRoom() {
   const canvasRef = useRef(null);
   const fabricCanvasRef = useRef(null);
-  const [brushColor, setBrushColor] = useState('black');
-  const [brushWidth, setBrushWidth] = useState(2);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [brushColor, setBrushColor] = useState('#000000');
+  const [brushWidth, setBrushWidth] = useState(5);
+  const [brushType, setBrushType] = useState('PencilBrush');
+
+  function toggleDrawing() {
+    if (fabricCanvasRef.current) {
+      const newDrawingMode = !fabricCanvasRef.current.isDrawingMode;
+      fabricCanvasRef.current.isDrawingMode = newDrawingMode;
+      setIsDrawing(newDrawingMode);
+    }
+  }
+
+  function clearCanvas() {
+    if (fabricCanvasRef.current) {
+      fabricCanvasRef.current.clear();
+    }
+  }
 
   useEffect(() => {
-    // Initialize Fabric.js Canvas
-    const fabricCanvas = new fabric.Canvas(canvasRef.current, {
-      isDrawingMode: true, // Enable freehand drawing mode
-    });
+    if (typeof window !== 'undefined') {
+      import('fabric').then((fabric) => {
+        if (fabricCanvasRef.current) {
+          fabricCanvasRef.current.dispose();
+        }
+        fabricCanvasRef.current = new fabric.Canvas(canvasRef.current);
+        const canvas = fabricCanvasRef.current;
+        canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+        canvas.freeDrawingBrush.color = brushColor;
+        canvas.freeDrawingBrush.width = brushWidth;
 
-    // Set default drawing styles
-    fabricCanvas.freeDrawingBrush.color = brushColor;
-    fabricCanvas.freeDrawingBrush.width = brushWidth;
-
-    // Store the Fabric.js canvas in a ref for future use
-    fabricCanvasRef.current = fabricCanvas;
-
-    // Cleanup on unmount
+        fabric.Object.prototype.transparentCorners = false;
+        canvas.setWidth(window.innerWidth);
+        canvas.setHeight(window.innerHeight - 64);
+        canvas.renderAll();
+      });
+    }
     return () => {
-      fabricCanvas.dispose();
+      if (fabricCanvasRef.current) {
+        fabricCanvasRef.current.dispose();
+      }
     };
   }, []);
 
-  // Function to update drawing color
-  const changeColor = (color) => {
-    setBrushColor(color);
-    if (fabricCanvasRef.current) {
-      fabricCanvasRef.current.freeDrawingBrush.color = color;
+  useEffect(() => {
+    if (fabricCanvasRef.current && fabricCanvasRef.current.freeDrawingBrush) {
+      fabricCanvasRef.current.freeDrawingBrush.color = brushColor;
+      fabricCanvasRef.current.freeDrawingBrush.width = brushWidth;
     }
-  };
+  }, [brushColor, brushWidth]);
 
-  // Function to update brush size
-  const changeBrushSize = (size) => {
-    setBrushWidth(size);
+  useEffect(() => {
     if (fabricCanvasRef.current) {
-      fabricCanvasRef.current.freeDrawingBrush.width = size;
+      import('fabric').then((fabric) => {
+        fabricCanvasRef.current.freeDrawingBrush = new fabric[brushType](fabricCanvasRef.current);
+        fabricCanvasRef.current.freeDrawingBrush.color = brushColor;
+        fabricCanvasRef.current.freeDrawingBrush.width = brushWidth;
+      });
     }
-  };
-
-  // Function to enable eraser
-  const enableEraser = () => {
-    if (fabricCanvasRef.current) {
-      fabricCanvasRef.current.isDrawingMode = true;
-      fabricCanvasRef.current.freeDrawingBrush.color = 'white'; // White acts as the eraser
-    }
-  };
+  }, [brushType]);
 
   return (
-    <div>
-      {/* Tool Buttons */}
-      <div style={{ marginBottom: '10px' }}>
-        {/* Color Buttons */}
-        <button onClick={() => changeColor('black')}>Black</button>
-        <button onClick={() => changeColor('red')}>Red</button>
-        <button onClick={() => changeColor('blue')}>Blue</button>
-        <button onClick={() => changeColor('green')}>Green</button>
-
-        {/* Brush Size Buttons */}
-        <button onClick={() => changeBrushSize(2)}>Small</button>
-        <button onClick={() => changeBrushSize(5)}>Medium</button>
-        <button onClick={() => changeBrushSize(10)}>Large</button>
-
-        {/* Eraser Button */}
-        <button onClick={enableEraser}>Eraser</button>
-      </div>
-
-      {/* Canvas */}
-      <canvas
-        ref={canvasRef}
-        style={{
-          display: 'block',
-          backgroundColor: 'white',
-          cursor: 'crosshair',
+    <Box>
+      <AppBar position="fixed"> 
+        <Toolbar 
+        sx= {{
+          bgcolor: "gray",
+          display: "flex",
+          flexDirection: "row",
+          
         }}
-        width={window.innerWidth}
-        height={window.innerHeight}
-      ></canvas>
-    </div>
+        >
+         <MenuButton value="PencilBrush" icon={<ModeIcon />} onClick={toggleDrawing}/>
+         <MenuButton icon={<BrushIcon />} onClick={() => setBrushType("SprayBrush")}/>
+         <MenuButton icon={<PanoramaFishEyeIcon />} onClick={() => setBrushType("CircleBrush")}/>
+         <Button onClick={clearCanvas}
+          sx= {{
+            marginRight: "8px",
+          }}
+         >Clear</Button>
+         <TextField 
+           type="color" 
+           sx={{ width: "50px", marginRight: "8px" }}
+           value={brushColor} 
+           onChange={(e) => setBrushColor(e.target.value)}
+         />
+         <TextField 
+           type="number" 
+           value={brushWidth} 
+           sx={{ width: "100px", marginRight: "8px" }}
+           onChange={(e) => setBrushWidth(parseInt(e.target.value))}
+         />
+        </Toolbar>
+      </AppBar>
+      <Box sx={{ marginTop: '64px' }}>
+        <canvas ref={canvasRef} />
+      </Box>
+    </Box>
   );
 }

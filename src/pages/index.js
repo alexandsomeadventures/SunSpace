@@ -181,7 +181,16 @@ export default function Home() {
       </AppBar>
 
       <Container sx={{ paddingTop: "80px", bgcolor: "background.paper", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
-        <Typography variant="h2" component="h1" gutterBottom>
+        <Typography variant="h2" component="h1" gutterBottom
+          sx={{
+            fontFamily: "monospace",
+            fontWeight: 700,
+            letterSpacing: ".2rem",
+            color: "white",
+            textAlign: "center",
+            textShadow: "0 0 20px rgba(60, 60, 50, 1)",
+          }}
+        >
           <Typewriter
             options={{
               strings: ["SunSpace", "Workspace for All", "Used by teams in"],
