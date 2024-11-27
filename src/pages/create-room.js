@@ -88,7 +88,7 @@ export default function CreateRoom() {
       <AppBar position="fixed"> 
         <Toolbar 
         sx= {{
-          bgcolor: "gray",
+          bgcolor: "#B7574B",
           display: "flex",
           flexDirection: "row",
           
