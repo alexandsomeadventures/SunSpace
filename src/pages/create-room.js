@@ -3,6 +3,7 @@ import { AppBar, Box, Button, Toolbar, Select, MenuItem, TextField } from '@mui/
 import ModeIcon from '@mui/icons-material/Mode';
 import BrushIcon from '@mui/icons-material/Brush';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
+import EraserIcon from '@mui/icons-material/DeleteForever';
 function MenuButton({ icon, onClick }) {
   return (
     <Button
@@ -99,8 +100,9 @@ export default function CreateRoom() {
          <Button onClick={clearCanvas}
           sx= {{
             marginRight: "8px",
+            color: "black",
           }}
-         >Clear</Button>
+         ><EraserIcon /></Button>
          <TextField 
            type="color" 
            sx={{ width: "50px", marginRight: "8px" }}
