@@ -103,18 +103,18 @@ export default function CreateRoom() {
             color: "black",
           }}
          ><EraserIcon /></Button>
-         <TextField 
-           type="color" 
-           sx={{ width: "50px", marginRight: "8px" }}
-           value={brushColor} 
-           onChange={(e) => setBrushColor(e.target.value)}
-         />
-         <TextField 
-           type="number" 
-           value={brushWidth} 
-           sx={{ width: "100px", marginRight: "8px" }}
-           onChange={(e) => setBrushWidth(parseInt(e.target.value))}
-         />
+        <TextField 
+          type="color" 
+          sx={{ width: "50px", ...sharedTextFieldStyles }}
+          value={brushColor} 
+          onChange={(e) => setBrushColor(e.target.value)}
+        />
+        <TextField 
+          type="number" 
+          sx={{ width: "100px", ...sharedTextFieldStyles }}
+          value={brushWidth} 
+          onChange={(e) => setBrushWidth(parseInt(e.target.value))}
+        />
         </Toolbar>
       </AppBar>
       <Box sx={{ marginTop: '64px' }}>
@@ -123,3 +123,15 @@ export default function CreateRoom() {
     </Box>
   );
 }
+
+const sharedTextFieldStyles = {
+  marginRight: "8px",
+  "& .MuiInputBase-input": {
+    border: "none",
+    outline: "none",
+  },
+  "& .MuiInputBase-input:focus": {
+    boxShadow: "0 0 0 2px #FFFFFF", // focus color
+    borderRadius: "4px",
+  },
+};
