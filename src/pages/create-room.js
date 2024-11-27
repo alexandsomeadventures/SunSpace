@@ -100,7 +100,7 @@ export default function CreateRoom() {
          <Button onClick={clearCanvas}
           sx= {{
             marginRight: "8px",
-            color: "black",
+            color: "white",
           }}
          ><EraserIcon /></Button>
         <TextField 
